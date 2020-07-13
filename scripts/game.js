@@ -3,6 +3,7 @@ class Game {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
     this.player = new Clubber(this, 0, 0);
+    this.dancer = new Dancers(this, 100, 100, 2, 0.5, 10, 'red');
     this.setKeyBindings();
   }
 
@@ -30,7 +31,9 @@ class Game {
     });
   }
 
-  runLogic() {}
+  runLogic() {
+    this.dancer.runLogic();
+  }
 
   clean() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -38,11 +41,13 @@ class Game {
 
   paint() {
     this.player.paint();
+    this.dancer.paint();
   }
 
   loop() {
     this.runLogic();
     this.clean();
     this.paint();
+    window.requestAnimationFrame(() => this.loop());
   }
 }
