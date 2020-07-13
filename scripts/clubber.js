@@ -1,5 +1,5 @@
 class Clubber {
-  constructor(game) {
+  constructor(game, col, row) {
     this.game = game;
     this.col = col;
     this.row = row;
