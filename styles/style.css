@@ -10,6 +10,11 @@ body {
 
 h1 {
   color: coral;
+  /* background-color: #052c46; */
+}
+
+img {
+  max-height: 200px;
 }
 
 canvas {

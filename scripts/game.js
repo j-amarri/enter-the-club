@@ -3,7 +3,9 @@ class Game {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
     this.player = new Clubber(this, 0, 0);
-    this.dancer = new Dancers(this, 100, 100, 2, 0.5, 10, 'red');
+    this.dancers = [];
+    this.deltaStamp = 4000;
+    this.timer = 0;
     this.setKeyBindings();
   }
 
@@ -31,8 +33,23 @@ class Game {
     });
   }
 
-  runLogic() {
-    this.dancer.runLogic();
+  runLogic(timestamp) {
+    if (this.timer < timestamp - this.deltaStamp) {
+      this.timer = timestamp;
+      let dancer = new Dancers(
+        this,
+        50,
+        50,
+        Math.floor(Math.random() * 10),
+        0.5,
+        10,
+        'red'
+      );
+      this.dancers.push(dancer);
+    }
+    for (let dancer of this.dancers) {
+      dancer.runLogic();
+    }
   }
 
   clean() {
@@ -41,13 +58,15 @@ class Game {
 
   paint() {
     this.player.paint();
-    this.dancer.paint();
+    for (let dancer of this.dancers) {
+      dancer.paint();
+    }
   }
 
-  loop() {
-    this.runLogic();
+  loop(timestamp) {
+    this.runLogic(timestamp);
     this.clean();
     this.paint();
-    window.requestAnimationFrame(() => this.loop());
+    window.requestAnimationFrame(timestamp => this.loop(timestamp));
   }
 }

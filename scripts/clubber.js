@@ -6,19 +6,26 @@ class Clubber {
   }
 
   moveUp() {
-    this.row--;
+    if (this.row > 0) {
+      this.row--;
+    }
   }
-
   moveDown() {
-    this.row++;
+    if (this.row < this.game.canvas.height / 30 - 1) {
+      this.row++;
+    }
   }
 
   moveLeft() {
-    this.col--;
+    if (this.col > 0) {
+      this.col--;
+    }
   }
 
   moveRight() {
-    this.col++;
+    if (this.col < this.game.canvas.width / 30 - 1) {
+      this.col++;
+    }
   }
 
   paint() {
