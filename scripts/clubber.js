@@ -32,7 +32,12 @@ class Clubber {
     const context = this.game.context;
     context.save();
     context.fillStyle = 'white';
-    context.fillRect(this.col * 30, this.row * 30, 30, 30);
+    context.fillRect(
+      this.col * this.game.SQUARE_WIDTH,
+      this.row * this.game.SQUARE_WIDTH,
+      this.game.SQUARE_WIDTH,
+      this.game.SQUARE_WIDTH
+    );
     context.restore();
   }
 }

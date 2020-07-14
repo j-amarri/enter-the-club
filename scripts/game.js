@@ -3,9 +3,16 @@ class Game {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
     this.player = new Clubber(this, 0, 0);
+    this.vodka = new Drink(this, 3, 4);
     this.dancers = [];
-    this.deltaStamp = 1100;
+    this.deltaStamp = 5000;
     this.timer = 0;
+    // Booze varibals
+    this.slowspeed = false;
+    this.boozeTimestamp = 10000;
+    this.boozeTimer = 0;
+    //
+    this.SQUARE_WIDTH = 30;
     this.setKeyBindings();
   }
 
@@ -33,7 +40,7 @@ class Game {
     });
   }
 
-  checkCollision() {
+  checkClubberCollision() {
     for (let i = 0; i < this.dancers.length; i++) {
       let dancerX = Math.floor(this.dancers[i].positionX / 30);
       let dancerY = Math.floor(this.dancers[i].positionY / 30);
@@ -43,15 +50,31 @@ class Game {
     }
   }
 
+  findBoozes() {
+    if (
+      this.player.col === this.vodka.col &&
+      this.player.row === this.vodka.row
+    ) {
+      for (let dancer of this.dancers) {
+        console.log(dancer.speedX);
+        dancer.speedX--;
+        console.log(dancer.speedX);
+        dancer.speedY--;
+      }
+      this.vodka = 0;
+      this.slowspeed = true;
+    }
+  }
+
   runLogic(timestamp) {
     if (this.timer < timestamp - this.deltaStamp) {
       this.timer = timestamp;
       let dancer = new Dancers(
         this,
-        50,
-        50,
-        Math.floor(Math.random() * 2),
-        0.5,
+        Math.floor(Math.random() * 800),
+        Math.floor(Math.random() * 400),
+        Math.floor(Math.random() * 5),
+        Math.floor(Math.random() * 5),
         10,
         'red'
       );
@@ -60,26 +83,50 @@ class Game {
     for (let dancer of this.dancers) {
       dancer.runLogic();
     }
-    this.checkCollision();
+    this.checkClubberCollision();
+
+    // When user takes a booze, logic is described below
+    if (!this.slowspeed) {
+      this.boozeTimer = timestamp;
+    }
+
+    if (this.slowspeed) {
+      if (this.boozeTimer < timestamp - this.boozeTimestamp) {
+        console.log('aline');
+        for (let dancer of this.dancers) {
+          dancer.speedX++;
+          dancer.speedY++;
+          this.slowspeed = false;
+        }
+      }
+    }
+    this.findBoozes();
   }
 
+  // Clean method
   clean() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
+  // Paint method
   paint() {
     this.player.paint();
     for (let dancer of this.dancers) {
       dancer.paint();
     }
+    if (this.vodka !== 0) {
+      this.vodka.paint();
+    }
   }
 
+  // Lose game method
   lose() {
-    this.running = false;
+    //this.running = false;
     clearInterval();
     window.location.reload();
   }
 
+  // Loop method
   loop(timestamp) {
     this.runLogic(timestamp);
     this.clean();

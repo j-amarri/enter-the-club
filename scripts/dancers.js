@@ -31,7 +31,8 @@ class Dancers {
   paint() {
     const context = this.game.context;
     context.save();
-    context.fillStyle = 'coral';
+    let colors = ['purple', 'red', 'blue', 'lime'];
+    context.fillStyle = colors[Math.floor(Math.random() * colors.length)];
     context.beginPath();
     context.arc(this.positionX, this.positionY, this.radius, 0, Math.PI * 2);
     context.closePath();
