@@ -2,8 +2,15 @@ class Game {
   constructor(canvas) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
+    this.SQUARE_WIDTH = 30;
     this.player = new Clubber(this, 0, 0);
-    this.vodka = new Drink(this, 3, 4);
+    this.randomColumn = Math.floor(
+      Math.random() * (this.canvas.width / this.SQUARE_WIDTH)
+    );
+    this.randomRow = Math.floor(
+      Math.random() * (this.canvas.height / this.SQUARE_WIDTH)
+    );
+    this.vodka = new Drink(this, this.randomColumn, this.randomRow);
     this.dancers = [];
     this.deltaStamp = 5000;
     this.timer = 0;
@@ -12,7 +19,7 @@ class Game {
     this.boozeTimestamp = 10000;
     this.boozeTimer = 0;
     //
-    this.SQUARE_WIDTH = 30;
+
     this.setKeyBindings();
   }
 
@@ -57,9 +64,9 @@ class Game {
     ) {
       for (let dancer of this.dancers) {
         console.log(dancer.speedX);
-        dancer.speedX--;
+        dancer.speedX *= 0.5;
         console.log(dancer.speedX);
-        dancer.speedY--;
+        dancer.speedY *= 0.5;
       }
       this.vodka = 0;
       this.slowspeed = true;
@@ -94,8 +101,8 @@ class Game {
       if (this.boozeTimer < timestamp - this.boozeTimestamp) {
         console.log('aline');
         for (let dancer of this.dancers) {
-          dancer.speedX++;
-          dancer.speedY++;
+          dancer.speedX *= 1.5;
+          dancer.speedY *= 1.5;
           this.slowspeed = false;
         }
       }
