@@ -4,7 +4,7 @@ class Game {
     this.context = canvas.getContext('2d');
     this.player = new Clubber(this, 0, 0);
     this.dancers = [];
-    this.deltaStamp = 4000;
+    this.deltaStamp = 1100;
     this.timer = 0;
     this.setKeyBindings();
   }
@@ -33,6 +33,16 @@ class Game {
     });
   }
 
+  checkCollision() {
+    for (let i = 0; i < this.dancers.length; i++) {
+      let dancerX = Math.floor(this.dancers[i].positionX / 30);
+      let dancerY = Math.floor(this.dancers[i].positionY / 30);
+      if (dancerX === this.player.col && dancerY === this.player.row) {
+        this.lose();
+      }
+    }
+  }
+
   runLogic(timestamp) {
     if (this.timer < timestamp - this.deltaStamp) {
       this.timer = timestamp;
@@ -40,7 +50,7 @@ class Game {
         this,
         50,
         50,
-        Math.floor(Math.random() * 10),
+        Math.floor(Math.random() * 2),
         0.5,
         10,
         'red'
@@ -50,6 +60,7 @@ class Game {
     for (let dancer of this.dancers) {
       dancer.runLogic();
     }
+    this.checkCollision();
   }
 
   clean() {
@@ -61,6 +72,12 @@ class Game {
     for (let dancer of this.dancers) {
       dancer.paint();
     }
+  }
+
+  lose() {
+    this.running = false;
+    clearInterval();
+    window.location.reload();
   }
 
   loop(timestamp) {
