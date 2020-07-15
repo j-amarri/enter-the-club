@@ -4,15 +4,37 @@ html,
 body {
   height: 100%;
   font-family: 'Press Start 2P', cursive;
+  margin: 0;
 }
 
 body {
-  background-color: rgb(26, 25, 25);
+  background-color: #00003c;
+  background-image: url('/styles/images/skyline-b\ copy\ 2.png');
+  background-repeat: repeat-x;
+  background-size: 200px 200px;
+}
+.buildings-block {
+  display: flex;
+  justify-content: flex-end;
+  height: 150px;
+  margin-top: 50px;
+}
+
+.near-buildings {
+  display: block;
+  height: 250px;
+  position: absolute;
+  top: 0;
+  left: 350px;
 }
 
 h1 {
-  color: coral;
-  /* background-color: #052c46; */
+  font-size: 32px;
+  color: #fc583a;
+  position: absolute;
+  top: 0;
+  margin-top: 20px;
+  margin-left: 20px;
 }
 
 p {
@@ -24,5 +46,11 @@ img {
 }
 
 canvas {
-  background-color: black;
+  background-color: #00003c;
+  position: absolute;
+  display: block;
+  margin: auto;
+  top: 200px;
+  left: 350px;
+  right: 0;
 }

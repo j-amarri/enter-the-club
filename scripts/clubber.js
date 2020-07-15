@@ -31,7 +31,7 @@ class Clubber {
   paint() {
     const context = this.game.context;
     context.save();
-    context.fillStyle = 'white';
+    context.fillStyle = '#FC583A';
     context.fillRect(
       this.col * SQUARE_WIDTH,
       this.row * SQUARE_WIDTH,
