@@ -4,15 +4,30 @@ class Game {
     this.context = canvas.getContext('2d');
     this.player = new Clubber(this, 0, 0);
     this.scoreboard = new Scoreboard(this);
+
+    // Dancers variables
     this.dancers = [];
     this.deltaStamp = 5000;
     this.timer = 0;
 
-    this.vodka = new Drink(this);
-    this.potion = new Potion(this);
+    this.running = true;
+
+    // Drink variables
+    this.vodka = 0;
+    this.vodkaTimestampStart = 10000;
+    this.vodkaTimerStart = 0;
+    this.slowspeed = false;
+    this.vodkaTimestampLength = 10000;
+    this.vodkaTimer = 0;
+
+    // Potion variables
+    this.potion = 0;
     this.immunity = false;
     this.potionTimestamp = 10000;
     this.potionTimer = 0;
+    this.immunityTimestampStart = 30000;
+    this.immunityTimer = 0;
+
     this.setKeyBindings();
   }
 
@@ -49,9 +64,15 @@ class Game {
         dancerY === this.player.row &&
         !this.immunity
       ) {
-        this.lose();
+        this.running = false;
+        //clearInterval();
+        window.location.reload();
       }
     }
+  }
+
+  createVodka() {
+    this.vodka = new Drink(this);
   }
 
   findVodka() {
@@ -59,7 +80,6 @@ class Game {
       this.player.col === this.vodka.col &&
       this.player.row === this.vodka.row
     ) {
-      console.log('Found vodka!');
       for (let dancer of this.dancers) {
         dancer.speedX *= 0.5;
         dancer.speedY *= 0.5;
@@ -67,6 +87,18 @@ class Game {
       this.vodka = 0;
       this.slowspeed = true;
     }
+  }
+
+  paintDrinkMessage() {
+    this.context.save();
+    this.context.fillStyle = 'white';
+    this.context.font = '24px Arial';
+    this.context.fillText('You got a drink!', 20, 20);
+    this.context.restore();
+  }
+
+  createPotion() {
+    this.potion = new Potion(this);
   }
 
   findPotion() {
@@ -77,6 +109,14 @@ class Game {
       this.potion = 0;
       this.immunity = true;
     }
+  }
+
+  paintPotionMessage() {
+    this.context.save();
+    this.context.fillStyle = 'white';
+    this.context.font = '24px Arial';
+    this.context.fillText('You are immune!', 20, 20);
+    this.context.restore();
   }
 
   runLogic(timestamp) {
@@ -98,13 +138,31 @@ class Game {
     }
     this.checkClubberCollision();
 
+    // Logic to create a drink
+    if (this.vodkaTimerStart === 0 && timestamp) {
+      this.vodkaTimerStart = timestamp;
+    }
+    if (this.vodkaTimerStart < timestamp - this.vodkaTimestampStart) {
+      this.createVodka();
+      this.vodkaTimerStart = timestamp;
+    }
+
+    // Logic to create a potion
+    if (this.immunityTimer === 0 && timestamp) {
+      this.immunityTimer = timestamp;
+    }
+    if (this.immunityTimer < timestamp - this.immunityTimestampStart) {
+      this.createPotion();
+      this.immunityTimer = timestamp;
+    }
+
     // When user takes a booze, logic is described below
     if (!this.slowspeed) {
       this.vodkaTimer = timestamp;
     }
 
     if (this.slowspeed) {
-      if (this.vodkaTimer < timestamp - this.vodkaTimestamp) {
+      if (this.vodkaTimer < timestamp - this.vodkaTimestampLength) {
         for (let dancer of this.dancers) {
           dancer.speedX *= 1.5;
           dancer.speedY *= 1.5;
@@ -120,7 +178,6 @@ class Game {
     }
     if (this.immunity) {
       if (this.potionTimer < timestamp - this.potionTimestamp) {
-        console.log('mah');
         this.immunity = false;
       }
     }
@@ -148,12 +205,18 @@ class Game {
     if (this.potion !== 0) {
       this.potion.paint();
     }
+    if (this.slowspeed) {
+      this.paintDrinkMessage();
+    }
+    if (this.immunity) {
+      this.paintPotionMessage();
+    }
   }
 
   // Lose game method
   lose() {
-    clearInterval();
-    window.location.reload();
+    //clearInterval();
+    //window.location.reload();
   }
 
   // Loop method

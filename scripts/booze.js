@@ -7,9 +7,6 @@ class Drink {
     this.row = Math.floor(
       Math.random() * (this.game.canvas.height / SQUARE_WIDTH)
     );
-    this.slowspeed = false;
-    this.vodkaTimestamp = 10000;
-    this.vodkaTimer = 0;
   }
 
   runLogic() {}
@@ -31,9 +28,6 @@ class Drink {
 class Potion extends Drink {
   constructor(game, col, row) {
     super(game, col, row);
-    this.immunity = false;
-    this.potionTimestamp = 10000;
-    this.potionTimer = 0;
   }
 
   runLogic() {}
