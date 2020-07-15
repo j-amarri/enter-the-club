@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 html,
 body {
   height: 100%;
-  font-family: 'Russo One', sans-serif;
+  font-family: 'Press Start 2P', cursive;
 }
 
 body {
@@ -11,6 +13,10 @@ body {
 h1 {
   color: coral;
   /* background-color: #052c46; */
+}
+
+p {
+  color: white;
 }
 
 img {

@@ -2,24 +2,17 @@ class Game {
   constructor(canvas) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
-    this.SQUARE_WIDTH = 30;
     this.player = new Clubber(this, 0, 0);
-    this.randomColumn = Math.floor(
-      Math.random() * (this.canvas.width / this.SQUARE_WIDTH)
-    );
-    this.randomRow = Math.floor(
-      Math.random() * (this.canvas.height / this.SQUARE_WIDTH)
-    );
-    this.vodka = new Drink(this, this.randomColumn, this.randomRow);
+    this.scoreboard = new Scoreboard(this);
     this.dancers = [];
     this.deltaStamp = 5000;
     this.timer = 0;
-    // Booze varibals
-    this.slowspeed = false;
-    this.boozeTimestamp = 10000;
-    this.boozeTimer = 0;
-    //
 
+    this.vodka = new Drink(this);
+    this.potion = new Potion(this);
+    this.immunity = false;
+    this.potionTimestamp = 10000;
+    this.potionTimer = 0;
     this.setKeyBindings();
   }
 
@@ -51,25 +44,38 @@ class Game {
     for (let i = 0; i < this.dancers.length; i++) {
       let dancerX = Math.floor(this.dancers[i].positionX / 30);
       let dancerY = Math.floor(this.dancers[i].positionY / 30);
-      if (dancerX === this.player.col && dancerY === this.player.row) {
+      if (
+        dancerX === this.player.col &&
+        dancerY === this.player.row &&
+        !this.immunity
+      ) {
         this.lose();
       }
     }
   }
 
-  findBoozes() {
+  findVodka() {
     if (
       this.player.col === this.vodka.col &&
       this.player.row === this.vodka.row
     ) {
+      console.log('Found vodka!');
       for (let dancer of this.dancers) {
-        console.log(dancer.speedX);
         dancer.speedX *= 0.5;
-        console.log(dancer.speedX);
         dancer.speedY *= 0.5;
       }
       this.vodka = 0;
       this.slowspeed = true;
+    }
+  }
+
+  findPotion() {
+    if (
+      this.player.col === this.potion.col &&
+      this.player.row === this.potion.row
+    ) {
+      this.potion = 0;
+      this.immunity = true;
     }
   }
 
@@ -94,12 +100,11 @@ class Game {
 
     // When user takes a booze, logic is described below
     if (!this.slowspeed) {
-      this.boozeTimer = timestamp;
+      this.vodkaTimer = timestamp;
     }
 
     if (this.slowspeed) {
-      if (this.boozeTimer < timestamp - this.boozeTimestamp) {
-        console.log('aline');
+      if (this.vodkaTimer < timestamp - this.vodkaTimestamp) {
         for (let dancer of this.dancers) {
           dancer.speedX *= 1.5;
           dancer.speedY *= 1.5;
@@ -107,7 +112,22 @@ class Game {
         }
       }
     }
-    this.findBoozes();
+    this.findVodka();
+
+    // When user takes a immunity potion, logic below
+    if (!this.immunity) {
+      this.potionTimer = timestamp;
+    }
+    if (this.immunity) {
+      if (this.potionTimer < timestamp - this.potionTimestamp) {
+        console.log('mah');
+        this.immunity = false;
+      }
+    }
+    this.findPotion();
+
+    // Scoreboard logic
+    this.scoreboard.calculateTime(timestamp);
   }
 
   // Clean method
@@ -118,17 +138,20 @@ class Game {
   // Paint method
   paint() {
     this.player.paint();
+    this.scoreboard.paint();
     for (let dancer of this.dancers) {
       dancer.paint();
     }
     if (this.vodka !== 0) {
       this.vodka.paint();
     }
+    if (this.potion !== 0) {
+      this.potion.paint();
+    }
   }
 
   // Lose game method
   lose() {
-    //this.running = false;
     clearInterval();
     window.location.reload();
   }
