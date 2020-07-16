@@ -4,13 +4,12 @@ class Game {
     this.context = canvas.getContext('2d');
     this.player = new Clubber(this, 0, 0);
     this.scoreboard = new Scoreboard(this);
+    this.running = false;
 
     // Dancers variables
     this.dancers = [];
     this.deltaStamp = 5000;
     this.timer = 0;
-
-    this.running = true;
 
     // Drink variables
     this.vodka = 0;
@@ -51,22 +50,31 @@ class Game {
           event.preventDefault();
           this.player.moveRight();
           break;
+        case 'Enter':
+          event.preventDefault();
+          this.running = true;
+          this.loop();
+          break;
+        case 's':
+          event.preventDefault();
+          window.location.reload();
+          break;
       }
     });
   }
 
   checkClubberCollision() {
     for (let i = 0; i < this.dancers.length; i++) {
-      let dancerX = Math.floor(this.dancers[i].positionX / 30);
-      let dancerY = Math.floor(this.dancers[i].positionY / 30);
+      let dancerX = Math.floor(this.dancers[i].positionX / SQUARE_WIDTH);
+      let dancerY = Math.floor(this.dancers[i].positionY / SQUARE_WIDTH);
       if (
-        dancerX === this.player.col &&
-        dancerY === this.player.row &&
+        dancerX <= this.player.col + 1.5 &&
+        dancerX + 1.5 >= this.player.col &&
+        dancerY <= this.player.row + 1.5 &&
+        dancerY + 1.5 >= this.player.row &&
         !this.immunity
       ) {
         this.running = false;
-        //clearInterval();
-        window.location.reload();
       }
     }
   }
@@ -92,7 +100,7 @@ class Game {
   paintDrinkMessage() {
     this.context.save();
     this.context.fillStyle = 'white';
-    this.context.font = '24px Arial';
+    this.context.font = '24px';
     this.context.fillText('You got a drink!', 20, 20);
     this.context.restore();
   }
@@ -128,7 +136,7 @@ class Game {
         Math.floor(Math.random() * 400),
         Math.floor(Math.random() * 5),
         Math.floor(Math.random() * 5),
-        10,
+        20,
         'red'
       );
       this.dancers.push(dancer);
@@ -193,23 +201,69 @@ class Game {
   }
 
   // Paint method
+  paintStartScreen() {
+    this.context.save();
+    this.context.font = '24px "Press Start 2P"';
+    this.context.fillStyle = 'white';
+    this.context.fillText('RULES OF CONDUCT', 50, 100);
+    let charsDown = new Image();
+    charsDown.src = '/styles/images/sprite/frente2.png';
+    charsDown.addEventListener('load', event => {
+      this.context.drawImage(charsDown, 600, 50, 150, 150);
+    });
+    this.context.font = '14px "Press Start 2P"';
+    this.context.fillText('* Stay away from other clubbers', 50, 150);
+    this.context.fillText('* Take 🧪 for immunity', 50, 200);
+    this.context.fillText('* Take 🍷 for smoothness', 50, 250);
+    /* let keyboard = new Image();
+    keyboard.src = '/styles/images/keyboard-arrow.png';
+    keyboard.addEventListener('load', event => {
+      this.context.drawImage(keyboard, 600, 50, 150, 150);
+    }); */
+    this.context.fillStyle = '#fc583a';
+    this.context.font = '18px "Press Start 2P"';
+    this.context.fillText('- Press enter to start -', 50, 450);
+    this.context.restore();
+  }
+
+  paintEndGame() {
+    this.context.save();
+    this.context.fillStyle = 'white';
+    this.context.font = '32px "Press Start 2P"';
+    this.context.fillText('You have been', 50, 100);
+    this.context.fillText('infected!', 50, 150);
+    let charSad = new Image();
+    charSad.src = '/styles/images/sprite/frente3 copiar.png';
+    charSad.addEventListener('load', event => {
+      this.context.drawImage(charSad, 600, 50, 150, 150);
+    });
+    this.context.fillStyle = '#fc583a';
+    this.context.font = '18px "Press Start 2P"';
+    this.context.fillText('- Press S to go on line again -', 50, 450);
+    this.context.restore();
+  }
+
   paint() {
-    this.player.paint();
-    this.scoreboard.paint();
-    for (let dancer of this.dancers) {
-      dancer.paint();
-    }
-    if (this.vodka !== 0) {
-      this.vodka.paint();
-    }
-    if (this.potion !== 0) {
-      this.potion.paint();
-    }
-    if (this.slowspeed) {
-      this.paintDrinkMessage();
-    }
-    if (this.immunity) {
-      this.paintPotionMessage();
+    if (this.running === false) {
+      this.paintEndGame();
+    } else {
+      this.player.paint();
+      this.scoreboard.paint();
+      for (let dancer of this.dancers) {
+        dancer.paint();
+      }
+      if (this.vodka !== 0) {
+        this.vodka.paint();
+      }
+      if (this.potion !== 0) {
+        this.potion.paint();
+      }
+      if (this.slowspeed) {
+        this.paintDrinkMessage();
+      }
+      if (this.immunity) {
+        this.paintPotionMessage();
+      }
     }
   }
 
@@ -223,7 +277,9 @@ class Game {
   loop(timestamp) {
     this.runLogic(timestamp);
     this.clean();
+    if (this.running) {
+      window.requestAnimationFrame(timestamp => this.loop(timestamp));
+    }
     this.paint();
-    window.requestAnimationFrame(timestamp => this.loop(timestamp));
   }
 }

@@ -12,9 +12,9 @@ class Scoreboard {
     const context = this.game.context;
     context.save();
     context.fillStyle = 'white';
-    context.font = '24px Arial';
+    context.font = '14px "Press Start 2P"';
     context.fillText(
-      'Clubbing time: ' + this.clubbingTime,
+      'CLUB TIME: ' + this.clubbingTime,
       this.game.canvas.width - 200,
       this.game.canvas.height - 30
     );

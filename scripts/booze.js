@@ -7,6 +7,8 @@ class Drink {
     this.row = Math.floor(
       Math.random() * (this.game.canvas.height / SQUARE_WIDTH)
     );
+    this.image = new Image();
+    this.image.src = '/styles/images/cup_02b.png';
   }
 
   runLogic() {}
@@ -15,7 +17,8 @@ class Drink {
     const context = this.game.context;
     context.save();
     context.fillStyle = 'green';
-    context.fillRect(
+    context.drawImage(
+      this.image,
       this.col * SQUARE_WIDTH,
       this.row * SQUARE_WIDTH,
       SQUARE_WIDTH,
@@ -28,6 +31,8 @@ class Drink {
 class Potion extends Drink {
   constructor(game, col, row) {
     super(game, col, row);
+    this.image = new Image();
+    this.image.src = '/styles/images/potion_03c.png';
   }
 
   runLogic() {}
@@ -35,8 +40,8 @@ class Potion extends Drink {
   paint() {
     const context = this.game.context;
     context.save();
-    context.fillStyle = 'purple';
-    context.fillRect(
+    context.drawImage(
+      this.image,
       this.col * SQUARE_WIDTH,
       this.row * SQUARE_WIDTH,
       SQUARE_WIDTH,

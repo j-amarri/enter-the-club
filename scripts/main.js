@@ -1,7 +1,8 @@
 window.addEventListener('load', () => {
   const canvasElement = document.getElementById('club');
   const game = new Game(canvasElement);
-  game.loop();
+  game.paintStartScreen();
+  //game.loop();
 });
 
 const SQUARE_WIDTH = 30;
