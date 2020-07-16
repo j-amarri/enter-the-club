@@ -16,7 +16,7 @@ class Game {
     this.vodkaTimestampStart = 5000;
     this.vodkaTimerStart = 0;
     this.slowspeed = false;
-    this.vodkaTimestampLength = 30000;
+    this.vodkaTimestampLength = 5000;
     this.vodkaTimer = 0;
 
     // Potion variables
