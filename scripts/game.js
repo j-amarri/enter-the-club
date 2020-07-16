@@ -13,10 +13,10 @@ class Game {
 
     // Drink variables
     this.vodka = 0;
-    this.vodkaTimestampStart = 10000;
+    this.vodkaTimestampStart = 5000;
     this.vodkaTimerStart = 0;
     this.slowspeed = false;
-    this.vodkaTimestampLength = 10000;
+    this.vodkaTimestampLength = 30000;
     this.vodkaTimer = 0;
 
     // Potion variables
@@ -24,7 +24,7 @@ class Game {
     this.immunity = false;
     this.potionTimestamp = 10000;
     this.potionTimer = 0;
-    this.immunityTimestampStart = 30000;
+    this.immunityTimestampStart = 5000;
     this.immunityTimer = 0;
 
     this.setKeyBindings();
@@ -68,10 +68,10 @@ class Game {
       let dancerX = Math.floor(this.dancers[i].positionX / SQUARE_WIDTH);
       let dancerY = Math.floor(this.dancers[i].positionY / SQUARE_WIDTH);
       if (
-        dancerX <= this.player.col + 1.5 &&
-        dancerX + 1.5 >= this.player.col &&
-        dancerY <= this.player.row + 1.5 &&
-        dancerY + 1.5 >= this.player.row &&
+        dancerX < this.player.col + 3 &&
+        dancerX + 1 > this.player.col &&
+        dancerY < this.player.row + 3 &&
+        dancerY + 1 > this.player.row &&
         !this.immunity
       ) {
         this.running = false;
@@ -85,8 +85,10 @@ class Game {
 
   findVodka() {
     if (
-      this.player.col === this.vodka.col &&
-      this.player.row === this.vodka.row
+      this.vodka.col < this.player.col + 3 &&
+      this.vodka.col + 1 > this.player.col &&
+      this.vodka.row < this.player.row + 3 &&
+      this.vodka.row + 1 > this.player.row
     ) {
       for (let dancer of this.dancers) {
         dancer.speedX *= 0.5;
@@ -100,8 +102,8 @@ class Game {
   paintDrinkMessage() {
     this.context.save();
     this.context.fillStyle = 'white';
-    this.context.font = '24px';
-    this.context.fillText('You got a drink!', 20, 20);
+    this.context.font = '18px "Press Start 2P"';
+    this.context.fillText('You got a drink!', 20, 30);
     this.context.restore();
   }
 
@@ -111,8 +113,10 @@ class Game {
 
   findPotion() {
     if (
-      this.player.col === this.potion.col &&
-      this.player.row === this.potion.row
+      this.potion.col < this.player.col + 3 &&
+      this.potion.col + 1 > this.player.col &&
+      this.potion.row < this.player.row + 3 &&
+      this.potion.row + 1 > this.player.row
     ) {
       this.potion = 0;
       this.immunity = true;
@@ -122,8 +126,8 @@ class Game {
   paintPotionMessage() {
     this.context.save();
     this.context.fillStyle = 'white';
-    this.context.font = '24px Arial';
-    this.context.fillText('You are immune!', 20, 20);
+    this.context.font = '18px "Press Start 2P"';
+    this.context.fillText('You are immune!', 20, 30);
     this.context.restore();
   }
 
@@ -232,12 +236,17 @@ class Game {
     this.context.font = '32px "Press Start 2P"';
     this.context.fillText('You have been', 50, 100);
     this.context.fillText('infected!', 50, 150);
+    this.context.font = '18px "Press Start 2P"';
+    console.log('end');
+    this.context.fillText('You have been clubbing for', 50, 200);
+    this.context.fillStyle = '#fc583a';
+    this.context.font = '64px "Press Start 2P"';
+    this.context.fillText(this.scoreboard.clubbingTime + ' secs', 50, 300);
     let charSad = new Image();
     charSad.src = '/styles/images/sprite/frente3 copiar.png';
     charSad.addEventListener('load', event => {
       this.context.drawImage(charSad, 600, 50, 150, 150);
     });
-    this.context.fillStyle = '#fc583a';
     this.context.font = '18px "Press Start 2P"';
     this.context.fillText('- Press S to go on line again -', 50, 450);
     this.context.restore();

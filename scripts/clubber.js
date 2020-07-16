@@ -21,21 +21,21 @@ class Clubber {
     }
   }
   moveDown() {
-    if (this.row < this.game.canvas.height / 30 - 1) {
+    if (this.row < this.game.canvas.height / 30 - 3) {
       this.row++;
       this.direction = 'down';
     }
   }
 
   moveLeft() {
-    if (this.col > 0) {
+    if (this.col >= 0) {
       this.col--;
       this.direction = 'left';
     }
   }
 
   moveRight() {
-    if (this.col < this.game.canvas.width / 30 - 1) {
+    if (this.col < this.game.canvas.width / 30 - 2) {
       this.col++;
       this.direction = 'right';
     }
