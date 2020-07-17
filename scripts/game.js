@@ -26,7 +26,7 @@ class Game {
     this.immunity = false;
     this.potionTimestamp = 5000;
     this.potionTimer = 0;
-    this.immunityTimestampStart = 20000;
+    this.immunityTimestampStart = 15000;
     this.immunityTimer = 0;
 
     this.setKeyBindings();
