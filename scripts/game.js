@@ -5,6 +5,8 @@ class Game {
     this.player = new Clubber(this, 0, 0);
     this.scoreboard = new Scoreboard(this);
     this.running = false;
+    this.gameStarted = false;
+    this.startingTime = 0;
 
     // Dancers variables
     this.dancers = [];
@@ -22,9 +24,9 @@ class Game {
     // Potion variables
     this.potion = 0;
     this.immunity = false;
-    this.potionTimestamp = 10000;
+    this.potionTimestamp = 5000;
     this.potionTimer = 0;
-    this.immunityTimestampStart = 5000;
+    this.immunityTimestampStart = 20000;
     this.immunityTimer = 0;
 
     this.setKeyBindings();
@@ -53,6 +55,18 @@ class Game {
         case 'Enter':
           event.preventDefault();
           this.running = true;
+
+          // Audio handling
+          outsideClubAudio.pause();
+          outsideClubAudio.currentTime = 0;
+          songAnna.play();
+
+          // Display DJ set
+          const vinylSet = document.getElementById('hide');
+          vinylSet.style.display = 'flex';
+
+          // Start game
+          this.gameStarted = true;
           this.loop();
           break;
         case 's':
@@ -75,6 +89,9 @@ class Game {
         !this.immunity
       ) {
         this.running = false;
+        const vinylSet = document.getElementById('hide');
+        vinylSet.style.display = 'none';
+        songAnna.volume = 0.3;
       }
     }
   }
@@ -103,7 +120,7 @@ class Game {
     this.context.save();
     this.context.fillStyle = 'white';
     this.context.font = '18px "Press Start 2P"';
-    this.context.fillText('You got a drink!', 20, 30);
+    this.context.fillText('You got smoothness!', 20, 30);
     this.context.restore();
   }
 
@@ -196,7 +213,7 @@ class Game {
     this.findPotion();
 
     // Scoreboard logic
-    this.scoreboard.calculateTime(timestamp);
+    this.scoreboard.calculateTime(timestamp - this.startingTime);
   }
 
   // Clean method
@@ -216,9 +233,10 @@ class Game {
       this.context.drawImage(charsDown, 600, 50, 150, 150);
     });
     this.context.font = '14px "Press Start 2P"';
-    this.context.fillText('* Stay away from other clubbers', 50, 150);
+    this.context.fillText('* Keep distance from clubbers', 50, 150);
     this.context.fillText('* Take 🧪 for immunity', 50, 200);
     this.context.fillText('* Take 🍷 for smoothness', 50, 250);
+    this.context.fillText('* ENJOY clubbing!', 50, 300);
     /* let keyboard = new Image();
     keyboard.src = '/styles/images/keyboard-arrow.png';
     keyboard.addEventListener('load', event => {
@@ -237,7 +255,6 @@ class Game {
     this.context.fillText('You have been', 50, 100);
     this.context.fillText('infected!', 50, 150);
     this.context.font = '18px "Press Start 2P"';
-    console.log('end');
     this.context.fillText('You have been clubbing for', 50, 200);
     this.context.fillStyle = '#fc583a';
     this.context.font = '64px "Press Start 2P"';
@@ -252,11 +269,11 @@ class Game {
     this.context.restore();
   }
 
-  paint() {
+  paint(timestamp) {
     if (this.running === false) {
       this.paintEndGame();
     } else {
-      this.player.paint();
+      this.player.paint(timestamp);
       this.scoreboard.paint();
       for (let dancer of this.dancers) {
         dancer.paint();
@@ -276,19 +293,17 @@ class Game {
     }
   }
 
-  // Lose game method
-  lose() {
-    //clearInterval();
-    //window.location.reload();
-  }
-
   // Loop method
   loop(timestamp) {
     this.runLogic(timestamp);
     this.clean();
+    if (this.gameStarted && timestamp) {
+      this.startingTime = timestamp;
+      this.gameStarted = false;
+    }
     if (this.running) {
       window.requestAnimationFrame(timestamp => this.loop(timestamp));
     }
-    this.paint();
+    this.paint(timestamp);
   }
 }
