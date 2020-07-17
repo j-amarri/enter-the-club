@@ -24,7 +24,7 @@ class Game {
     // Potion variables
     this.potion = 0;
     this.immunity = false;
-    this.potionTimestamp = 5000;
+    this.potionTimestamp = 10000;
     this.potionTimer = 0;
     this.immunityTimestampStart = 15000;
     this.immunityTimer = 0;
