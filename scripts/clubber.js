@@ -48,10 +48,43 @@ class Clubber {
     this.charMovingRightTimer = 0;
     this.arrayRight = 0;
 
+    // Sprite images left
+    this.charLeft = new Image();
+    this.charLeft.src = '/styles/images/sprite/outracaminhada2 copiar.png';
+    this.charLeft1 = new Image();
+    this.charLeft1.src = '/styles/images/sprite/outracaminhada3 copiar.png';
+    this.charLeft2 = new Image();
+    this.charLeft2.src = '/styles/images/sprite/outracaminhada4 copiar.png';
+    this.charLeft3 = new Image();
+    this.charLeft3.src = '/styles/images/sprite/outracaminhada5 copiar.png';
+    this.charLeft4 = new Image();
+    this.charLeft4.src = '/styles/images/sprite/outracaminhada6 copiar.png';
+    this.charLeft5 = new Image();
+    this.charLeft5.src = '/styles/images/sprite/outracaminhada7 copiar.png';
+    this.charLeft6 = new Image();
+    this.charLeft6.src = '/styles/images/sprite/outracaminhada8 copiar.png';
+    this.charLeft7 = new Image();
+    this.charLeft7.src = '/styles/images/sprite/outracaminhada9 copiar.png';
+    this.charLeft8 = new Image();
+    this.charLeft8.src = '/styles/images/sprite/outracaminhada10 copiar.png';
+    this.charMovingLeft = [
+      this.charLeft,
+      this.charLeft1,
+      this.charLeft2,
+      this.charLeft3,
+      this.charLeft4,
+      this.charLeft5,
+      this.charLeft6,
+      this.charLeft7,
+      this.charLeft8
+    ];
+    this.charMovingLeftTimer = 0;
+    this.arrayLeft = 0;
+
     this.charUp = new Image();
     this.charUp.src = '/styles/images/sprite/costas1 copiar.png';
-    this.charLeft = new Image();
-    this.charLeft.src = '/styles/images/sprite/outracaminhada3 copiar.png';
+    //this.charLeft = new Image();
+    //this.charLeft.src = '/styles/images/sprite/outracaminhada3 copiar.png';
   }
 
   moveUp() {
@@ -109,10 +142,14 @@ class Clubber {
       );
       context.restore();
     } else if (this.direction === 'left') {
+      if (this.charMovingLeftTimer < timestamp - this.spriteSpeed) {
+        this.charMovingLeftTimer = timestamp;
+        this.arrayLeft = this.arrayLeft === 0 ? 1 : 0;
+      }
       const context = this.game.context;
       context.save();
       context.drawImage(
-        this.charLeft,
+        this.charMovingLeft[this.arrayLeft],
         this.col * SQUARE_WIDTH,
         this.row * SQUARE_WIDTH,
         SQUARE_WIDTH * 3,
@@ -120,10 +157,9 @@ class Clubber {
       );
       context.restore();
     } else if (this.direction === 'right') {
-      console.log(timestamp, this.charMovingRight, this.spriteSpeed);
       if (this.charMovingRightTimer < timestamp - this.spriteSpeed) {
-        this.charMovingDownTimer = timestamp;
-        this.arrayRight = this.arrayRight === 0 ? 9 : 0;
+        this.charMovingRightTimer = timestamp;
+        this.arrayRight = this.arrayRight === 0 ? 1 : 0;
       }
       const context = this.game.context;
       context.save();

@@ -236,7 +236,7 @@ class Game {
     this.context.fillText('* Keep distance from clubbers', 50, 150);
     this.context.fillText('* Take 🧪 for immunity', 50, 200);
     this.context.fillText('* Take 🍷 for smoothness', 50, 250);
-    this.context.fillText('* ENJOY clubbing!', 50, 300);
+    this.context.fillText('* ENJOY club as much as you can!', 50, 300);
     /* let keyboard = new Image();
     keyboard.src = '/styles/images/keyboard-arrow.png';
     keyboard.addEventListener('load', event => {
